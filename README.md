@@ -5,6 +5,7 @@ A flutter project to show how pop in nested navigators doesn't work.
 ## Using
 
 Build & run. See diagram below for explanation of pages.
+
        ------------
        |           |
       home      -----------------
