@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 void main() => runApp(new MyApp());
 
@@ -12,14 +11,6 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: 'Flutter Demo',
       theme: new ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-        // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
       ),
       home: new Home(),
@@ -52,24 +43,7 @@ class WillPopTest extends StatefulWidget {
   State<StatefulWidget> createState() => new WillPopTestState();
 }
 
-class WillPopTestState extends State<WillPopTest> with WidgetsBindingObserver {
-  @protected
-  @mustCallSuper
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @protected
-  @mustCallSuper
-  @override
-  dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
+class WillPopTestState extends State<WillPopTest> {
   Future<bool> didPopRoute() async {
     final NavigatorState navigator = widget.navigatorKey.currentState;
     assert(navigator != null);
@@ -87,7 +61,7 @@ class WillPopTestState extends State<WillPopTest> with WidgetsBindingObserver {
           ]),
       "two": (context) => new Column(children: [
             new Text(
-                "page 2 - pressing back should take you to page 1 but doesn't - it would if widgetbindingobserver worked"),
+                "page 2 - pressing back should take you to page 1"),
             new FlatButton(
                 onPressed: () => Navigator.pushNamed(context, "three"),
                 child: new Text("next"))
@@ -99,26 +73,31 @@ class WillPopTestState extends State<WillPopTest> with WidgetsBindingObserver {
           ])
     };
 
-    return new Column(
-      children: [
-        new Text("Will pop test"),
-        new Expanded(
-          child: new Container(
-            color: Colors.grey.shade100,
-            child: new Navigator(
-              key: widget.navigatorKey,
-              initialRoute: "one",
-              onGenerateRoute: (RouteSettings settings) =>
-                  new MaterialPageRoute(
-                    settings: settings,
-                    builder: (context) => new Material(
-                          child: subRoutes[settings.name](context),
-                        ),
-                  ),
+    return new WillPopScope(
+      child: new Column(
+        children: [
+          new Text("Will pop test"),
+          new Expanded(
+            child: new Container(
+              color: Colors.grey.shade100,
+              child: new Navigator(
+                key: widget.navigatorKey,
+                initialRoute: "one",
+                onGenerateRoute: (RouteSettings settings) =>
+                    new MaterialPageRoute(
+                      settings: settings,
+                      builder: (context) => new Material(
+                            child: subRoutes[settings.name](context),
+                          ),
+                    ),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
+      onWillPop: () async {
+        return !await didPopRoute();
+      },
     );
   }
 }

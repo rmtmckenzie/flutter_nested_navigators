@@ -1,10 +1,11 @@
 # flutter_nested_navigators
 
-A flutter project to show how pop in nested navigators doesn't work.
+A flutter project to show how pop in nested navigators ~~doesn't work~~ works.
 
 ## Using
 
 Build & run. See diagram below for explanation of pages.
+
        ------------
        |           |
       home      -----------------
@@ -27,16 +28,5 @@ Build & run. See diagram below for explanation of pages.
               page 3
               * (won't leave)
 
-      Actual routing:
-      home -->
-              page1
-           <--
-      home --> -->
-              page2
-           <--
-      home --> --> -->
-              page3
-           <--
-      home
-
-
+This used to show how it doesn't work, but now that it is implemented properly as per how flutter
+expects, it shows how nested navigators _DO_ work =)
